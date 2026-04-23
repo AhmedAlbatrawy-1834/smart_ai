@@ -99,6 +99,7 @@ async def predict_api(file: UploadFile = File(...)):
         img_tensor = preprocessing.preprocess(temp_path, device)
         result = prediction.predict(img_tensor, model, class_names)
 
+        result = result.replace("___", ": ").replace("_", " ")
         return {
             "status": "success",
             "prediction": result
@@ -113,4 +114,6 @@ async def predict_api(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app:app", host="0.0.0.0", port=port)
